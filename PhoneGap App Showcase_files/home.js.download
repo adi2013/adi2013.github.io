@@ -1,0 +1,40 @@
+(function() {
+  document.addEventListener("DOMContentLoaded", function(event) {
+    var didScroll, doThisStuffOnScroll, header, scrollSet, setScrollHandler, unsetScrollHandler;
+    didScroll = false;
+    header = document.getElementById('site-header');
+    doThisStuffOnScroll = function() {
+      didScroll = true;
+      if (window.scrollY > 50) {
+        header.classList.add('scroll');
+      } else {
+        header.classList.remove('scroll');
+      }
+    };
+    scrollSet = false;
+    setScrollHandler = function() {
+      scrollSet = true;
+      window.onscroll = doThisStuffOnScroll;
+      return setInterval((function() {
+        if (didScroll) {
+          didScroll = false;
+        }
+      }), 100);
+    };
+    unsetScrollHandler = function() {
+      scrollSet = false;
+      return window.onscroll = null;
+    };
+    if (window.innerWidth > 820) {
+      setScrollHandler();
+    }
+    return window.onresize = function(event) {
+      if (window.innerWidth > 820) {
+        return setScrollHandler();
+      } else {
+        return unsetScrollHandler();
+      }
+    };
+  });
+
+}).call(this);

@@ -1,0 +1,43 @@
+_satellite.pushAsyncScript(function(event, target, $variables){
+  _satellite._clearCookies("cpn");
+_satellite._clearCookies("ppn");
+
+//To delete Stock Internal search
+if (!_satellite.getVar("isSite_AdobeStock")) {
+    _satellite._clearCookies("s_stov");
+    _satellite._clearCookies("s_a_campaign_stock");
+}
+
+// Global Nav Search CTR tracking
+if (typeof jQuery === "function" && jQuery.fn.on) {
+    function linkTrack(type, linkPos, linkURL) {
+        var searchKeyword = jQuery(".Gnav-search-input") ? jQuery(".Gnav-search-input").val() : '',
+            previousPage = s_adbadobenonacdc.eVar28,
+            nextPage = linkURL.replace(/https?:\/\//, '').replace(/\?(.*)/, '');
+
+        s_adbadobenonacdc.eVar143 = type + searchKeyword + "|" + linkPos + "|" + previousPage + "|" + nextPage;
+        s_adbadobenonacdc.eVar69 = s_adbadobenonacdc.pageName;
+        s_adbadobenonacdc.linkTrackVars = "prop4,prop5,prop27,prop29,prop52,prop59,eVar69,eVar143";
+        s_adbadobenonacdc.tl_b(true, 'o', "Search CTR tracking");
+    }
+    // Search As You Type Clicks
+    jQuery(document).on("click", ".Gnav-hubblet a", function(e) {
+        var parentElem = jQuery(this).closest("li.Gnav-hubblet"),
+            prevSiblings = jQuery(parentElem).prevAll(),
+            nextSiblings = jQuery(parentElem).nextAll(),
+            totalElem = prevSiblings.length + nextSiblings.length + 1,
+            linkPos = totalElem - nextSiblings.length,
+            nextPageURL = jQuery(this).attr("href"),
+            searchType = "SAYT|";
+        linkTrack(searchType, linkPos, nextPageURL);
+    });
+    // Search Suggestions click
+    jQuery(document).on("click", ".Gnav-suggestion a", function() {
+        var nextPageURL = jQuery(this).attr("href"),
+            linkPos = jQuery(".Gnav-suggestion a").index($(this)),
+            searchType = "SAYT_Org|";
+        linkPos = linkPos + 1;
+        linkTrack(searchType, linkPos, nextPageURL);
+    });
+}
+});

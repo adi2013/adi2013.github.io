@@ -1,0 +1,19 @@
+(function() {
+  document.addEventListener("DOMContentLoaded", function(event) {
+    var body, expandButton, expandHandler, header;
+    console.log('mobile-nav');
+    expandHandler = function(e) {
+      console.log('tapped');
+      header.classList.toggle('expand');
+      body.classList.toggle('expand');
+      e.preventDefault();
+      return false;
+    };
+    expandButton = document.getElementById('site-header__expand-button');
+    header = document.getElementById('site-header');
+    body = document.getElementsByTagName('body')[0];
+    expandButton.addEventListener('mousedown', expandHandler, false);
+    return expandButton.addEventListener('touchstart', expandHandler, false);
+  });
+
+}).call(this);
